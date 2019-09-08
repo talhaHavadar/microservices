@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+message KeygenRequest {
+    string longurl = 1;
+    string seed = 2;
+}
+
+message KeygenResponse {
+    string shorturl = 1;
+}
+
+service KeygenService {
+    rpc Generate(KeygenRequest) returns (KeygenResponse);
+}

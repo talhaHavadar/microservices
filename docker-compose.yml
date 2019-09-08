@@ -1,0 +1,35 @@
+version: '3'
+services:
+ web:
+   # Build the Dockerfile that is in the web directory
+   build: ./web
+
+   # Always restart the container regardless of the exit status; try and restart the container indefinitely
+   restart: always
+
+   # Expose port 8000 to other containers (not to the host of the machine)
+   expose:
+     - "8000"
+
+   # Mount the web directory within the container at /home/flask/app/web
+   volumes:
+     - ./web:/home/flask/app/web
+
+   # Pass environment variables to the flask container (this debug level lets you see more useful information)
+   environment:
+     FLASK_DEBUG: 1
+
+ # Define the redis NGINX forward proxy container
+ nginx:
+
+   # build the nginx Dockerfile: http://bit.ly/2kuYaIv
+   build: nginx/
+   restart: always
+
+   # Expose port 80 to the host machine
+   ports:
+     - "8080:80"
+
+   # The Flask application needs to be available for NGINX to make successful proxy requests
+   depends_on:
+     - web
